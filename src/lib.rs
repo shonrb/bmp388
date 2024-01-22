@@ -32,6 +32,7 @@ use embedded_hal as ehal;
 use num_traits::Pow;
 
 #[cfg(feature = "config-builder")]
+#[doc(inline)]
 pub use config::{Config, ConfigBuilder};
 use config::{InterruptConfig, OversamplingConfig, Register};
 
