@@ -24,14 +24,6 @@
 // #![deny(missing_docs)]
 // #![deny(warnings)]
 #![no_std]
-#![cfg_attr(
-    all(nightly, feature = "asynch"),
-    feature(async_fn_in_trait, impl_trait_projections)
-)]
-#![cfg_attr(
-    all(feature = "asynch", nightly),
-    allow(stable_features, unknown_lints, async_fn_in_trait)
-)]
 
 use core::marker::PhantomData;
 
