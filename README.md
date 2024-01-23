@@ -12,7 +12,7 @@ Include [library](https://crates.io/crates/bmp388) as a dependency in your Cargo
 version = "<version>"
 ```
 
-Use embedded-hal implementation to get I2C handle and delay then create bmp388 handle:
+Use [`embedded-hal`](https://crates.io/crates/embedded-hal) implementation to get I2C handle and delay then create bmp388 handle:
 
 ```rust
 extern crate bmp388; // or just use bmp388; if 2018 edition is used.
@@ -24,9 +24,21 @@ let pres = ps.sensor_values();
 println!("{:?}", pres);
 ```
 
+
 ## Documentation
 
 API Docs available on [docs.rs](https://docs.rs/bmp388).
+
+## Features
+
+- default: none enabled by default
+- `defmt-03` - enable [`defmt@0.3`](crates.io/crates/defmt) formatting for structs and enums
+- `serde` - enable [`serde`](crates.io/crates/serde) Deserialize and Serialize implementations on structs and enums
+- `asynch` - enable [`embedded-hal-async`](https://crates.io/crates/embedded-hal-async) implementation for the Asynchronous API.
+- `config-builder` - enable the typed config builder `ConfigBuilder` for setting up the sensor and initializing it.
+
+## Minimum supported Rust version (MSRV)
+For the blocking API the MSRV is `1.65`, however, for the asynchronies API, enabled with the feature `asynch`, the MSRV is `1.75`.
 
 ## ToDo:
 

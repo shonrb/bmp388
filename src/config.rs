@@ -147,6 +147,8 @@ mod config_builder {
 
     use embedded_hal as ehal;
 
+    use ehal::i2c::SevenBitAddress;
+
     use typed_builder::TypedBuilder;
 
     use super::*;
@@ -176,10 +178,10 @@ mod config_builder {
         pub fn setup_blocking<I2C, E>(
             &self,
             i2c: I2C,
-            delay: &mut impl ehal::blocking::delay::DelayMs<u8>,
+            delay: &mut impl ehal::delay::DelayNs,
         ) -> Result<BMP388<I2C, Blocking>, E>
         where
-            I2C: ehal::blocking::i2c::WriteRead<Error = E>,
+            I2C: ehal::i2c::I2c<SevenBitAddress, Error = E>,
         {
             let mut bmp388 = BMP388::new_blocking(i2c, self.address, delay)?;
 

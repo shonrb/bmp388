@@ -12,18 +12,21 @@ jobs:
     name: Lints and checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@nightly
         with:
-            components: rustfmt, clippy
+            components: rustfmt, clippy, rust-docs
 
       - name: Rustfmt lints
         run: cargo fmt --all -- --check
 
       - name: Clippy lints
         run: cargo clippy --no-deps -- -D warnings
+
+      - name: Build docs
+        run: RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features --no-deps
     
   build-and-test:
     name: Build and test
@@ -35,14 +38,19 @@ jobs:
           - beta
           - nightly
           - 1.65 # MSRV
+          - 1.75 # `async_fn_in_trait` + `impl_trait_projections` stabilised
 
     steps:
-      - uses: actions/checkout@v3
-
+      - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust }}
-
-      - run: cargo build
-      - run: cargo test
-
+      - if: ${{ matrix.rust  != '1.65' }}
+        run: cargo build --all-features
+      - if: ${{ matrix.rust != '1.65' }}
+        run: cargo test --all-features
+      # embedded-hal-async has MSRV of 1.75, this is why we exclude `asynch` feature
+      - if: ${{ matrix.rust == '1.65' }}
+        run: cargo build -F defmt-03 -F serde -F config-builder
+      - if: ${{ matrix.rust == '1.65' }}
+        run: cargo test -F defmt-03 -F serde -F config-builder
