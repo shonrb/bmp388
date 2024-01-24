@@ -37,8 +37,8 @@ jobs:
           - stable
           - beta
           - nightly
-          - 1.65 # MSRV
-          - 1.75 # `async_fn_in_trait` + `impl_trait_projections` stabilised
+          - "1.65" # MSRV
+          - "1.75" # `async_fn_in_trait` + `impl_trait_projections` stabilised
 
     steps:
       - uses: actions/checkout@v4
