@@ -34,7 +34,7 @@ use num_traits::Pow;
 #[cfg(feature = "config-builder")]
 #[doc(inline)]
 pub use config::{Config, ConfigBuilder};
-use config::{InterruptConfig, OversamplingConfig, Register};
+use config::{InterruptConfig, OversamplingConfig, FifoConfig, Register};
 
 #[cfg(feature = "asynch")]
 mod asynch;
@@ -110,8 +110,8 @@ mod sealed {
 /// let sensor_data: SensorData = sensor.sensor_values().unwrap();
 /// ```
 pub struct BMP388<I2C, M: Mode> {
-    com: I2C,
-    addr: u8,
+    pub com: I2C,
+    pub addr: u8,
     /// Sea level pressure, initially it's [`STANDARD_SEA_LEVEL_PRESSURE`], however,
     /// you can calibrate it for your current altitude by calling
     /// [`BMP388::calibrated_absolute_difference`].
@@ -376,6 +376,12 @@ impl<I2C: ehal::i2c::I2c> BMP388<I2C, Blocking> {
         let value = self.read_byte(Register::int_ctrl)?;
 
         Ok(InterruptConfig::from_reg(value))
+    }
+
+    pub fn set_fifo_config(&mut self, new: FifoConfig) -> Result<(), I2C::Error> {
+        let (reg_1, reg_2) = new.to_regs();
+        self.write_byte(Register::fifo_config_1, reg_1)?;
+        self.write_byte(Register::fifo_config_2, reg_2)
     }
 
     ///Get the status register

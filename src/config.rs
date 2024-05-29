@@ -18,6 +18,8 @@ pub(crate) enum Register {
     cmd = 0x7E,
     status = 0x03,
     err = 0x02,
+    fifo_config_2 = 0x18,
+    fifo_config_1 = 0x17,
 }
 
 ///Oversampling Config (OSR)
@@ -139,6 +141,33 @@ impl Default for InterruptConfig {
             latch: false,
             data_ready_interrupt_enable: false,
         }
+    }
+}
+
+pub struct FifoConfig {
+    pub enabled: bool,
+    pub stop_on_full: bool,
+    pub store_pressure: bool,
+    pub store_temperature: bool,
+    pub return_sensor_time: bool,
+    pub subsampling: u8,
+    pub filter_data: bool
+}
+
+impl FifoConfig {
+    pub fn to_regs(&self) -> (u8, u8) {
+        let mode = self.enabled as u8;
+        let stop = (self.stop_on_full as u8) << 1;
+        let time = (self.return_sensor_time as u8) << 2;
+        let pres = (self.store_pressure as u8) << 3;
+        let temp = (self.store_temperature as u8) << 4;
+        let reg_1 = mode | stop | time | pres | temp;
+
+        let subsampling = self.subsampling & 0b111;
+        let filter = (self.filter_data as u8) << 3;
+        let reg_2 = subsampling | filter;
+        
+        (reg_1, reg_2)
     }
 }
 
