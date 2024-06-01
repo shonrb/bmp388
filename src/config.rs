@@ -144,13 +144,25 @@ impl Default for InterruptConfig {
     }
 }
 
+#[derive(Copy, Clone)]
+pub enum SubsamplingFactor {
+    subsample_1   = 0,
+    subsample_2   = 1,
+    subsample_4   = 2,
+    subsample_8   = 3,
+    subsample_16  = 4,
+    subsample_32  = 5,
+    subsample_64  = 6,
+    subsample_128 = 7,
+}
+
 pub struct FifoConfig {
     pub enabled: bool,
     pub stop_on_full: bool,
     pub store_pressure: bool,
     pub store_temperature: bool,
     pub return_sensor_time: bool,
-    pub subsampling: u8,
+    pub subsampling: SubsamplingFactor,
     pub filter_data: bool
 }
 
@@ -163,7 +175,7 @@ impl FifoConfig {
         let temp = (self.store_temperature as u8) << 4;
         let reg_1 = mode | stop | time | pres | temp;
 
-        let subsampling = self.subsampling & 0b111;
+        let subsampling = (self.subsampling as u8) & 0b111;
         let filter = (self.filter_data as u8) << 3;
         let reg_2 = subsampling | filter;
         
