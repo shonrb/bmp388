@@ -175,7 +175,7 @@ impl PressureCalibration {
 
 impl<I2C, M: Mode> BMP388<I2C, M> {
     /// Compensates a pressure value
-    pub(crate) fn compensate_pressure(&self, uncompensated: u32, compensated_temp: f64) -> f64 {
+    pub fn compensate_pressure(&self, uncompensated: u32, compensated_temp: f64) -> f64 {
         let uncompensated = uncompensated as f64;
         let p1 = ((self.pressure_calibration.dig_p1 as f64) - 16_384.0) / 1_048_576.0; //2^14 / 2^20
         let p2 = ((self.pressure_calibration.dig_p2 as f64) - 16_384.0) / 536_870_912.0; //2^14 / 2^29
@@ -208,7 +208,7 @@ impl<I2C, M: Mode> BMP388<I2C, M> {
     }
 
     /// Compensates a temperature value
-    pub(crate) fn compensate_temp(&self, uncompensated: u32) -> f64 {
+    pub fn compensate_temp(&self, uncompensated: u32) -> f64 {
         let t1 = (self.temperature_calibration.dig_t1 as f64) / 0.00390625; //2^-8
         let t2 = (self.temperature_calibration.dig_t2 as f64) / 1_073_741_824.0; //2^30
         let t3 = (self.temperature_calibration.dig_t3 as f64) / 281_474_976_710_656.0; //2^48
