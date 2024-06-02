@@ -144,7 +144,9 @@ impl Default for InterruptConfig {
     }
 }
 
+#[allow(non_camel_case_types)]
 #[derive(Copy, Clone)]
+#[repr(u8)]
 pub enum SubsamplingFactor {
     subsample_1   = 0,
     subsample_2   = 1,
