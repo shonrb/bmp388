@@ -144,18 +144,17 @@ impl Default for InterruptConfig {
     }
 }
 
-#[allow(non_camel_case_types)]
 #[derive(Copy, Clone)]
 #[repr(u8)]
 pub enum SubsamplingFactor {
-    subsample_1   = 0,
-    subsample_2   = 1,
-    subsample_4   = 2,
-    subsample_8   = 3,
-    subsample_16  = 4,
-    subsample_32  = 5,
-    subsample_64  = 6,
-    subsample_128 = 7,
+    Subsample1   = 0,
+    Subsample2   = 1,
+    Subsample4   = 2,
+    Subsample8   = 3,
+    Subsample16  = 4,
+    Subsample32  = 5,
+    Subsample64  = 6,
+    Subsample128 = 7,
 }
 
 pub struct FifoConfig {
